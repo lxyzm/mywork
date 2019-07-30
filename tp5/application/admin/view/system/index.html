@@ -1,0 +1,65 @@
+{layout name="uekadmin"}
+
+
+<!-- 内容 -->
+<div class="col-md-10">
+	
+	<ol class="breadcrumb">
+		<li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+		<li><a href="{:url('system/index')}">系统管理</a></li>
+		<li class="active">系统配置</li>
+
+		<button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+	</ol>
+
+	<!-- 面版 -->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			系统设置
+		</div>
+		<div class="panel-body">
+			
+			<form action="{:url('System/check')}" method="post" enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="">网站标题</label>
+					<input type="text" name="TITLE" placeholder="请输入网站标题" class="form-control" id="" value="{:config('webConfig.TITLE')}">
+				</div>
+				<div class="form-group">
+					<label for="">网站LOGO</label>
+					<input type="file" name="LOGO"  class="form-control"  id="">
+					<img src="/upload/{:config('webConfig.LOGO')}" alt="">
+				</div>
+				<div class="form-group">
+					<label for="">网站关键字</label>
+					<input type="text" name="KEYWORDS" placeholder="请输入网站关键字" class="form-control" id="" value="{:config('webConfig.KEYWORDS')}">
+				</div>
+				<div class="form-group">
+					<label for="">网站描述</label>
+					<textarea name="DESCRIPT" id="" placeholder="请输入网站描述" class="form-control" cols="30" rows="5" >{:config('webConfig.DESCRIPT')}</textarea>
+				</div>
+				<div class="form-group">
+					<label for="">版权信息</label>
+					<input type="text" name="BANQUAN" placeholder="请输入网站版权信息" class="form-control" id="" value="{:config('webConfig.BANQUAN')}">
+				</div>
+
+				<div class="form-group">
+					<label for="">备案信息</label>
+					<input type="text" name="BEIAN" placeholder="请输入网站备案信息" class="form-control" value="{:config('webConfig.BEIAN')}" id="">
+				</div>
+
+				<div class="form-group">
+					<label for="">百度统计代码</label>
+					<textarea name="BAIDU" id="" placeholder="请输入百度统计代码" class="form-control" cols="30" rows="5">{:config('webConfig.BAIDU')}</textarea>
+				</div>
+				
+
+				<div class="form-group">
+					<input type="submit" class="btn btn-success" value="提交">
+					<input type="reset" class="btn btn-danger" value="重置">
+				</div>
+				
+			</form>
+		</div>
+		
+	</div>
+</div>

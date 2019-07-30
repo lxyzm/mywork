@@ -1,0 +1,303 @@
+<!-- 引入模板布局 -->
+{layout name="uekadmin"}
+<style>
+	
+	.alert{
+		padding:10px;
+		display:none;
+	}
+
+</style>
+<script src="/static/layer/layer.js"></script>
+
+<!-- 内容 -->
+<div class="col-md-10">
+	
+	<ol class="breadcrumb">
+		<li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+		<li><a href="{:url('admin/index')}">栏目管理</a></li>
+		<li class="active">栏目列表</li>
+
+		<button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+	</ol>
+
+	<!-- 面版 -->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<button class="btn btn-danger" onclick="delAll()"><span class="glyphicon glyphicon-trash"></span> 批量删除</button>
+			<a href="javascript:;"  data-toggle="modal" data-target="#addAdmin" class="btn btn-success">
+				<span class="glyphicon glyphicon-plus"></span> 添加栏目
+			</a>
+			
+			<p class="pull-right tots" >共有 {$tot} 条数据</p>
+			<form action="" class="form-inline pull-right">
+				<div class="form-group">
+					<input type="text" name="search" value="{$_GET['search']|default=''}" class="form-control" placeholder="请输入你要搜索的内容" >
+				</div>
+				
+				<input type="submit" value="搜索" class="btn btn-success">
+			</form>
+
+
+		</div>
+		<table class="table-bordered table table-hover">
+			<th><input type="checkbox" name="" class="all" ></th>
+			<th>ID</th>
+			<th>栏目名</th>
+			<th>栏目关键字</th>
+			<th>栏目描述</th>
+			<th>栏目跳转地址</th>
+			<th>栏目排序</th>
+			<th>操作</th>
+
+			{volist name="list" id="value"}
+			<tr>
+				<td><input type="checkbox" name="" value="{$value['id']}" ></td>
+				<td>{$value['id']}</td>
+				<td>{$value.name}</td>
+				<td>{$value.keywords}</td>
+				<td>{$value.description}</td>
+				<td>{$value.url}</td>
+				<td><input type="text" style="width:50px;text-align:center;" name=""  onchange="sort(this,{$value.id})" value="{$value.sort}"></td>
+				
+				<td>
+					<a href="javascript:;" onclick="find({$value['id']})" data-toggle="modal" data-target="#editAdmin" class="glyphicon glyphicon-pencil"></a>
+					&nbsp;&nbsp;&nbsp;
+					<a href="javascript:;" onclick="del(this,{$value['id']})" class="glyphicon glyphicon-trash"></a>
+				</td>
+			</tr>
+			{/volist}
+
+			
+		</table>
+		<!-- 分页效果 -->
+		<div class="panel-footer">
+			<nav style="text-align:center;">
+				{$list->render()}
+			</nav>
+
+		</div>
+	</div>
+</div>
+
+
+<!-- 添加页面的摸态框 -->
+<div class="modal fade" id="addAdmin">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">添加栏目</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" id="addAdminForm">
+					<div class="form-group ">
+						<label for="">栏目名</label>
+						<input type="text" name="name" class="form-control addAdmin" placeholder="请输入栏目名"  >
+						<div class="alert alert-warning"></div>
+
+					</div>
+					<div class="form-group">
+						<label for="">栏目关键字</label>
+						<input type="text" name="keywords" class="form-control addAdmin" placeholder="请输入栏目关键字"  >
+						<div class="alert alert-warning"></div>
+
+					</div>
+					<div class="form-group">
+						<label for="">栏目描述</label>
+						<input type="text" name="description" class="form-control addAdmin" placeholder="请输入栏目描述"  >
+						<div class="alert alert-warning"></div>
+
+					</div>
+					<div class="form-group">
+						<label for="">栏目跳转地址</label>
+						<input type="text" name="url" class="form-control addAdmin" placeholder="请输入栏目跳转地址"  >
+						<div class="alert alert-warning"></div>
+
+					</div>
+
+					<div class="form-group">
+						<label for="">栏目排序</label>
+						<input type="number" name="sort" class="form-control addAdmin" value="0" placeholder="请输入栏目排序，数值越大越靠前"  >
+						<div class="alert alert-warning"></div>
+
+					</div>
+					
+					<div class="form-group pull-right">
+						<input type="button" onclick="add()" value="提交" class="btn btn-success">
+						<input type="reset" value="重置" class="btn btn-danger">
+					</div>
+
+					<div style="clear:both"></div>
+				</form>
+			</div>
+			
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- 修改页面的摸态框 -->
+<div class="modal fade" id="editAdmin">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">修改栏目</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" id="editAdminForm">
+					
+				</form>
+			</div>
+			
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+	// 排序方法
+
+	function sort(obj,id){
+
+		// 获取用户修改的内容
+
+		let val = $(obj).val();
+
+		// 发送ajax请求
+
+		$.post("{:url('Column/ajax_sort')}",{sort:val,id:id},function(data){
+
+			// 根据返回结果处理
+
+			if (data.code==200) {
+				layer.msg(data.info,{icon:1,time:2000},function(){
+					window.location.reload();
+				});
+
+			}else{
+				layer.msg(data.info,{icon:2});
+			}
+		})
+	}
+	// 点击添加按钮
+
+	function add(){
+		// 让所有的输入框都失去焦点
+		$(".addAdmin").blur();
+
+		// 判断所有信息是否全部正确
+
+		let isOk = 0;
+		$("#addAdminForm").find(".alert").each(function(){
+			if($(this).css("display")=="block"){
+				isOk=1;
+			}
+		});
+
+		// 判断isOk
+		if (isOk==0) {
+
+			// 发送ajax请求
+			let str = $("#addAdminForm").serializeArray();
+
+			$.post("{:url('Column/ajax_add')}",str,function(data){
+
+				// tp 中使用return返回的是json对象，不是json字符串
+				// 不需要使用eval进行转换
+
+				if (data.code==200) {
+					// 添加成功提示信息和操作
+					layer.msg(data.info,{icon:1,time:2000},function(){
+						window.location.reload();
+					});
+
+				}else{
+					// 添加失败的提示信息和操作
+					layer.msg(data.info,{icon:2});
+				}
+			});
+		};
+	}
+	
+	// 检测栏目名
+
+	$("input[name=name]").blur(function(){
+		// 获取输入框中的内容
+
+		let val = $(this).val();
+
+		// 判断是否问为空
+		if (val) {
+			$(this).next().hide(200);
+
+		}else{
+			$(this).next().show(200).html("请输入栏目名");
+		}
+	});
+
+	// 检测关键字
+
+	$("input[name=keywords]").blur(function(){
+		// 获取输入框中的内容
+
+		let val = $(this).val();
+
+		// 判断是否问为空
+		if (val) {
+			$(this).next().hide(200);
+
+		}else{
+			$(this).next().show(200).html("请输入栏目关键字");
+		}
+	});
+
+
+	// 检测栏目描述
+
+	$("input[name=description]").blur(function(){
+		// 获取输入框中的内容
+
+		let val = $(this).val();
+
+		// 判断是否问为空
+		if (val) {
+			$(this).next().hide(200);
+
+		}else{
+			$(this).next().show(200).html("请输入栏目描述");
+		}
+	});
+
+	// 检测栏目描述
+
+	$("input[name=url]").blur(function(){
+		// 获取输入框中的内容
+
+		let val = $(this).val();
+
+		// 判断是否问为空
+		if (val) {
+			$(this).next().hide(200);
+
+		}else{
+			$(this).next().show(200).html("请输入栏目跳转地址");
+		}
+	});
+
+	// 检测排序
+	$("input[name=sort]").blur(function(){
+		// 获取输入框中的内容
+
+		let val = $(this).val();
+
+		// 判断是否问为空
+		if (val) {
+			$(this).next().hide(200);
+
+		}else{
+			$(this).next().show(200).html("请输入栏目排序");
+		}
+	});
+
+
+</script>

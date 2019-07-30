@@ -1,0 +1,135 @@
+<!-- 引入模板布局 -->
+{layout name="uekadmin"}
+<style>
+	
+	.alert{
+		padding:10px;
+		display:none;
+	}
+
+</style>
+<script src="/static/layer/layer.js"></script>
+
+<!-- 内容 -->
+<div class="col-md-10">
+	
+	<ol class="breadcrumb">
+		<li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+		<li><a href="{:url('user/index')}">用户管理</a></li>
+		<li class="active">用户列表</li>
+
+		<button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+	</ol>
+
+	<!-- 面版 -->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			
+			
+			<p class="pull-right tots" >共有 {$tot} 条数据</p>
+			<form action="" class="form-inline pull-right">
+				<div class="form-group">
+					<input type="text" name="search" value="{$_GET['search']|default=''}" class="form-control" placeholder="请输入你要搜索的内容" id="">
+				</div>
+				
+				<input type="submit" value="搜索" class="btn btn-success">
+			</form>
+			<div style="clear:both"></div>
+
+
+		</div>
+		<table class="table-bordered table table-hover">
+			<th>ID</th>
+			<th>用户名</th>
+			<th>手机号</th>
+			<th>邮箱</th>
+			<th>昵称</th>
+			<th>头像</th>
+			<th>注册时间</th>
+			<th>状态</th>
+
+
+		{if condition="$tot"}
+
+			{volist name="list" id="val"}
+				<tr>
+					<td>{$val['id']}</td>
+					<td>{$val['username']}</td>
+					<td>{$val['phone']|default="该用户未绑定手机号"}</td>
+					<td>{$val['email']|default="该用户未绑定邮箱"}</td>
+					<td>{$val['nickname']|default="该用户未设置昵称"}</td>
+					<td>
+						{if condition="$val['img']"}
+							<img width="80px" src="/upload/user/{$val['img']}" alt="">
+						{else /}
+							<img width="80px" src="/upload/user/head.jpg" alt="">
+
+						{/if}
+					</td>
+					<td>{:date("Y-m-d H:i:s",$val['time'])}</td>
+					<td>
+						{if condition="$val['status']"}
+							<button class="btn btn-danger">黑名单</button>
+						{else /}
+							<button class="btn btn-success">白名单</button>
+						{/if}
+					</td>
+				</tr>
+			{/volist}
+		{/if}
+			
+		</table>
+
+		{if condition="$tot==0"}
+			<p style="text-align:center">
+				<img src="../../../static/admin/img/empty.png" alt="">
+				
+			</p>
+		{/if}
+
+		<!-- 分页效果 -->
+		<div class="panel-footer">
+			<nav style="text-align:center;">
+				{$list->render()}
+			</nav>
+
+		</div>
+	</div>
+</div>
+
+
+<script>
+	// ajax 修改用户状态
+
+	function status(obj,id,status){
+
+		// 发送ajax请求
+
+		$.get("{:url('Admin/ajax_status')}",{id:id,status:status},function(data){
+
+			// 通过判断
+
+			if (data==1) {
+				layer.msg("修改状态成功",{icon: 1,time:1000},function(){
+
+					// 如果修改成功
+
+					// 根据状态值，修改状态的显示
+					if (status==1) {
+
+						$(obj).parent().html('<span class="btn btn-danger" onclick="status(this,'+id+',0)">黑名单</span>');
+					}else{
+
+						$(obj).parent().html('<span class="btn btn-success" onclick="status(this,'+id+',1)">白名单</span>');
+
+					}
+				});
+
+			}else{
+				layer.msg("修改状态失败",{icon:2});
+			}
+		});
+
+	}
+	
+</script>

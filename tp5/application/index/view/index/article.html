@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{$data['title']}-{:config('webConfig.TITLE')}</title>
+<meta name="keywords" content="{$data['keywords']}">
+<meta name="description" content="{$data['description']}">
+<link rel="stylesheet" type="text/css" href="/static/home/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/static/home/css/nprogress.css">
+<link rel="stylesheet" type="text/css" href="/static/home/css/style.css">
+<link rel="stylesheet" type="text/css" href="/static/home/css/font-awesome.min.css">
+<link rel="apple-touch-icon-precomposed" href="/static/home/images/icon/icon.png">
+<link rel="shortcut icon" href="/static/home/images/icon/favicon.ico">
+<script src="/static/home/js/jquery-2.1.4.min.js"></script>
+<script src="/static/home/js/nprogress.js"></script>
+<script src="/static/home/js/jquery.lazyload.min.js"></script>
+</head>
+<body class="user-select single">
+{include file="public/head"}
+
+<section class="container">
+  <div class="content-wrap">
+    <div class="content">
+      <header class="article-header">
+        <h1 class="article-title"><a href="">{$data['title']}</a></h1>
+        <div class="article-meta"> 
+          <span class="item article-meta-time">
+            <time class="time" data-toggle="tooltip" data-placement="bottom" title="时间：{:date('Y-m-d H:i:s',$data['time'])}"><i class="glyphicon glyphicon-time"></i> {:date('Y-m-d H:i:s',$data['time'])}</time>
+          </span>
+          <span class="item article-meta-source" data-toggle="tooltip" data-placement="bottom" title="来源：{$data['author']}"><i class="glyphicon glyphicon-globe"></i> {$data['author']}</span>
+
+          <span class="item article-meta-category" data-toggle="tooltip" data-placement="bottom" title="栏目：{$data['name']}"><i class="glyphicon glyphicon-list"></i> <a href="" title="">{$data['name']}</a></span> 
+
+          <span class="item article-meta-views" data-toggle="tooltip" data-placement="bottom" title="查看：{$data.num}"><i class="glyphicon glyphicon-eye-open"></i> 共{$data.num}人围观</span> 
+
+          <span class="item article-meta-comment" data-toggle="tooltip" data-placement="bottom" title="评论：0"><i class="glyphicon glyphicon-comment"></i> 0个不明物体</span> </div>
+      </header>
+      <article class="article-content">
+
+        {$data.text}
+        
+      </article>
+      <div class="article-tags">标签：<a href="" rel="tag">PHP</a></div>
+      <div class="relates">
+        <div class="title">
+          <h3>相关推荐</h3>
+        </div>
+        <ul>
+          {volist name="tuijian" id="tui"}
+            <li><a href="{:url('Index/article',['id'=>$tui['id']])}">{$tui.title}</a></li>
+          {/volist}
+        </ul>
+      </div>
+      <div class="title" id="comment">
+        <h3>评论 <small>抢沙发</small></h3>
+      </div>
+      <div id="respond">
+        <div class="comment-signarea">
+          <h3 class="text-muted">评论前必须登录！</h3>
+          <p> <a data-toggle="modal" data-target="#loginModal" class="btn btn-primary">立即登录</a> 
+              <a href="javascript:;" data-toggle="modal" data-target="#regModal" class="btn btn-default">现在注册</a> </p>
+        </div>
+      </div>
+      <div id="respond">
+        <form action="" method="post" id="comment-form">
+          <div class="comment">
+            <div class="comment-title"><img class="avatar" src="/static/home/images/icon/icon.png" alt="" /></div>
+            <div class="comment-box">
+              <textarea placeholder="您的评论可以一针见血" name="comment" id="comment-textarea" cols="100%" rows="3" tabindex="1" ></textarea>
+              <div class="comment-ctrl"> <span class="emotion"><img src="/static/home/images/face/5.png" width="20" height="20" alt="" />表情</span>
+                <div class="comment-prompt"> <i class="fa fa-spin fa-circle-o-notch"></i> <span class="comment-prompt-text"></span> </div>
+                <input type="hidden" value="1" class="articleid" />
+                <button type="submit" name="comment-submit" id="comment-submit" tabindex="5" articleid="1">评论</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div id="postcomments">
+        <ol class="commentlist">
+          {volist name="comment" id="val"}
+          <li class="comment-content" style="position:relative">
+            <span class="comment-f">#{$i}</span>
+            <div class="comment-avatar">
+              <img class="avatar" src="/upload/user/{$val.img|default='head.jpg'}" alt="" />
+            </div>
+            <div class="comment-main">
+              <p>{$val['username']}<span class="time">({:date("Y-m-d",$val['time'])})</span><br />
+                {$val.text}</p>
+            </div>
+          </li>
+
+          {/volist}
+        </ol>
+        
+        <div class="quotes"><span class="disabled">首页</span><span class="disabled">上一页</span><a class="current">1</a><a href="">2</a><span class="disabled">下一页</span><span class="disabled">尾页</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="sidebar">
+    <div class="fixed">
+      <div class="widget widget-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#centre" aria-controls="centre" role="tab" data-toggle="tab">会员中心</a></li>
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane centre active" id="centre">
+            <h4>需要登录才能进入会员中心</h4>
+            <p><a data-toggle="modal" data-target="#loginModal" class="btn btn-primary">立即登录</a> 
+              <a href="javascript:;" data-toggle="modal" data-target="#regModal" class="btn btn-default">现在注册</a></p> </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="widget widget_sentence">
+      <h3>每日一句</h3>
+      <div class="widget-sentence-content">
+        <h4>2016年01月05日星期二</h4>
+        <p>Do not let what you cannot do interfere with what you can do.<br />
+          别让你不能做的事妨碍到你能做的事。（John Wooden）</p>
+      </div>
+    </div>
+    <div class="widget widget_hot">
+      <h3>热门文章</h3>
+      <ul>
+        {volist name="hot" id="val"}
+          <li>
+            <a href="{:url('Index/article',['id'=>$val['id']])}">
+              <span class="thumbnail">
+                <img class="thumb" data-original="/upload/news/{$val.img}" src="/upload/news/{$val.img}" alt="">
+              </span>
+              <span class="text">{$val.title}</span>
+              <span class="muted"><i class="glyphicon glyphicon-time"></i> {:date("Y-m-d",$val.time)} </span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i> {$val.num}</span></a></li>
+
+        {/volist}
+       
+      </ul>
+    </div>
+  </aside>
+</section>
+{include file="public/footer"}
+
+
+<div class="modal fade user-select" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{:url('Index/check')}" method="post">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="loginModalLabel">登录</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="loginModalUserNmae">用户名</label>
+            <input type="text" class="form-control" id="loginModalUserNmae" placeholder="请输入用户名" name="username" autofocus maxlength="15" autocomplete="off" required>
+          </div>
+          <div class="form-group">
+            <label for="loginModalUserPwd">密码</label>
+            <input type="password" class="form-control" id="loginModalUserPwd" placeholder="请输入密码" name="password" maxlength="18" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">登录</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade user-select" id="regModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{:url('Index/reg')}" method="post">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="loginModalLabel">注册</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">手机号</label>
+            <input type="text" class="form-control" id="" placeholder="请输入手机号" name="phone" autofocus maxlength="11" autocomplete="off" required>
+          </div>
+		<div class="form-group">
+            <label for="">用戶名</label>
+            <input type="text" class="form-control" id="" placeholder="请输入用户名" name="username" autofocus maxlength="11" autocomplete="off" required>
+          </div>
+
+           <div class="form-group">
+            <label for="loginModalUserPwd">密码</label>
+            <input type="password" class="form-control" id="loginModalUserPwd" placeholder="请输入密码" maxlength="18" name='pass' autocomplete="off" required>
+          </div>
+           <div class="form-group">
+            <label for="loginModalUserPwd">确认密码</label>
+            <input type="password" class="form-control" id="loginModalUserPwd" placeholder="请输入密码" maxlength="18" name="repass" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">注册</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/static/home/js/bootstrap.min.js"></script> 
+<script src="/static/home/js/jquery.ias.js"></script> 
+<script src="/static/home/js/scripts.js"></script> 
+<script src="/static/home/js/jquery.qqFace.js"></script> 
+<script type="text/javascript">
+$(function(){
+	$('.emotion').qqFace({
+		id : 'facebox', 
+		assign:'comment-textarea', 
+		path:'/static/home/images/arclist/'	//表情存放的路径
+	});
+ });   
+</script>
+</body>
+</html>

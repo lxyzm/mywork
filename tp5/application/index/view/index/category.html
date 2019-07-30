@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>异清轩博客栏目页面</title>
+<link rel="stylesheet" type="text/css" href="/static/home/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/static/home/css/nprogress.css">
+<link rel="stylesheet" type="text/css" href="/static/home/css/style.css">
+<link rel="stylesheet" type="text/css" href="/static/home/css/font-awesome.min.css">
+<link rel="apple-touch-icon-precomposed" href="/static/home/images/icon/icon.png">
+<link rel="shortcut icon" href="/static/home/images/icon/favicon.ico">
+<script src="/static/home/js/jquery-2.1.4.min.js"></script>
+<script src="/static/home/js/nprogress.js"></script>
+<script src="/static/home/js/jquery.lazyload.min.js"></script>
+</head>
+
+<body class="user-select">
+{include file="public/head"}
+<section class="container">
+  <div class="content-wrap">
+    <div class="content">
+      <div class="title">
+        <h3>{$type['name']}</h3>
+      </div>
+      {volist name="data" id="val"}
+      <article class="excerpt excerpt-1">
+        <a class="focus" href="{:url('Index/article',['id'=>$val['id']])}" title="">
+          <img class="thumb" data-original="/upload/news/{$val.img}" src="/upload/news/{$val.img}" alt=""></a>
+        <header><a class="cat" href="program">{$type['name']}<i></i></a>
+          <h2><a href="article.html" title="">{$val['title']}</a></h2>
+        </header>
+        <p class="meta">
+          <time class="time"><i class="glyphicon glyphicon-time"></i> {:date("Y-m-d H:i:s",$val['time'])}</time>
+          <span class="views"><i class="glyphicon glyphicon-eye-open"></i> 共{$val['num']}人围观</span> <a class="comment" href="article.html#comment"><i class="glyphicon glyphicon-comment"></i> 0个不明物体</a></p>
+        <p class="note">{$val['description']} </p>
+      </article>
+
+      {/volist}
+      
+      <nav class="pagination" style="display: none;">
+        <ul>
+          <li class="prev-page"></li>
+          <li class="active"><span>1</span></li>
+          <li><a href="?page=2">2</a></li>
+          <li class="next-page"><a href="?page=2">下一页</a></li>
+          <li><span>共 2 页</span></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <aside class="sidebar">
+    <div class="fixed">
+      <div class="widget widget-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+          <!-- <li role="presentation" class="active"><a href="#notice" aria-controls="notice" role="tab" data-toggle="tab">网站公告</a></li> -->
+          <li role="presentation" class="active"><a href="#centre" aria-controls="centre" role="tab" data-toggle="tab">会员中心</a></li>
+          <!-- <li role="presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab">联系站长</a></li> -->
+        </ul>
+          <div role="tabpanel" class="tab-pane centre active" id="centre">
+            <h4>需要登录才能进入会员中心</h4>
+            <p> <a data-toggle="modal" data-target="#loginModal" class="btn btn-primary">立即登录</a> 
+				<a href="javascript:;" data-toggle="modal" data-target="#regModal" class="btn btn-default">现在注册</a></p> </p>
+          </div>
+        </div>
+      </div>
+      <div class="widget widget_sentence">
+        <h3>每日一句</h3>
+        <div class="widget-sentence-content">
+          <h4>2016年01月05日星期二</h4>
+          <p>Do not let what you cannot do interfere with what you can do.<br />
+            别让你不能做的事妨碍到你能做的事。（John Wooden）</p>
+        </div>
+      </div>
+    </div>
+    <div class="widget widget_hot">
+      <h3>热门文章</h3>
+      <ul>
+        {volist name="hot" id="val"}
+        <li>
+          <a href="">
+            <span class="thumbnail">
+              <img class="thumb" data-original="/upload/news/{$val.img}" src="/upload/news/{$val.img}" alt=""></span>
+            <span class="text">{$val.title}</span>
+            <span class="muted"><i class="glyphicon glyphicon-time"></i> {:date("Y-m-d",$val['time'])}</span>
+            <span class="muted"><i class="glyphicon glyphicon-eye-open"></i> {$val['num']}</span>
+          </a>
+        </li>
+        {/volist}
+        
+      </ul>
+    </div>
+  </aside>
+</section>
+{include file="public/footer"}
+
+<!--微信二维码模态框-->
+<div class="modal fade user-select" id="WeChat" tabindex="-1" role="dialog" aria-labelledby="WeChatModalLabel">
+  <div class="modal-dialog" role="document" style="margin-top:120px;width:280px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="WeChatModalLabel" style="cursor:default;">微信扫一扫</h4>
+      </div>
+      <div class="modal-body" style="text-align:center"> <img src="/static/home/images/weixin.jpg" alt="" style="cursor:pointer"/> </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade user-select" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{:url('Index/check')}" method="post">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="loginModalLabel">登录</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="loginModalUserNmae">用户名</label>
+            <input type="text" class="form-control" id="loginModalUserNmae" placeholder="请输入用户名" name="username" autofocus maxlength="15" autocomplete="off" required>
+          </div>
+          <div class="form-group">
+            <label for="loginModalUserPwd">密码</label>
+            <input type="password" class="form-control" id="loginModalUserPwd" placeholder="请输入密码" name="password" maxlength="18" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">登录</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade user-select" id="regModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{:url('Index/reg')}" method="post">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="loginModalLabel">注册</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">手机号</label>
+            <input type="text" class="form-control" id="" placeholder="请输入手机号" name="phone" autofocus maxlength="11" autocomplete="off" required>
+          </div>
+          <div class="form-group">
+            <label for="loginModalUserPwd">验证码</label>
+            <br>
+            <input type="text" class="form-control" style="display:inline-block;width:300px;" id="loginModalUserPwd" placeholder="请输入验证码" name="code" maxlength="18" autocomplete="off" required>
+            <button onclick="send()" type="button" style="display:inline-block;"  class="btn btn-success">发送验证码</button>
+
+
+          </div>
+           <div class="form-group">
+            <label for="loginModalUserPwd">密码</label>
+            <input type="password" class="form-control" id="loginModalUserPwd" placeholder="请输入密码" maxlength="18" name='pass' autocomplete="off" required>
+          </div>
+           <div class="form-group">
+            <label for="loginModalUserPwd">确认密码</label>
+            <input type="password" class="form-control" id="loginModalUserPwd" placeholder="请输入密码" maxlength="18" name="repass" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">登录</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/static/home/js/bootstrap.min.js"></script> 
+<script src="/static/home/js/jquery.ias.js"></script> 
+<script src="/static/home/js/scripts.js"></script>
+</body>
+</html>

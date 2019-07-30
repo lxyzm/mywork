@@ -1,0 +1,37 @@
+<form action="{:url('Slider/save')}"  method="post" enctype="multipart/form-data">
+	<div class="form-group ">
+		<label for="">轮播图名称</label>
+		<input required type="text" name="name" value="{$data.name}" class="form-control addAdmin" placeholder="请输入轮播图名"  >
+		<input type="hidden" name="id" value="{$data.id}">
+		<div class="alert alert-warning"></div>
+
+	</div>
+	
+	<div class="form-group">
+		<label for="">轮播图图片</label>
+		<input type="file" name="img" id="">
+		<br>
+		<img src="/upload/slider/{$data.img}" width="100%" alt="">
+		<input type="hidden" name="oldimg" value="{$data.img}">
+	</div>
+	<div class="form-group">
+		<label for="">轮播图跳转地址</label>
+		<input required type="text" name="url" class="form-control addAdmin" placeholder="请输入轮播图跳转地址"  value="{$data.url}">
+		<div class="alert alert-warning"></div>
+
+	</div>
+
+	<div class="form-group">
+		<label for="">轮播图排序</label>
+		<input required type="number" name="sort" class="form-control addAdmin" value="0" placeholder="请输入轮播图排序，数值越大越靠前"  >
+		<div class="alert alert-warning" value="{$data.sort}"></div>
+
+	</div>
+	
+	<div class="form-group pull-right">
+		<input type="submit" value="提交" class="btn btn-success">
+		<input type="reset" value="重置" class="btn btn-danger">
+	</div>
+
+	<div style="clear:both"></div>
+</form>
